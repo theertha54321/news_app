@@ -11,7 +11,7 @@ class CategoryModelController with ChangeNotifier{
   bool isLoading = false;
   CategoryModel? newsList ;
   Future<void> getCategories(String? category) async{
-    String endurl = category==null ? "top-headlines/sources?apiKey=7701f3d356bc4cc6a193ba4cb0d2b9cd" : "top-headlines/sources?category=$category&apiKey=7701f3d356bc4cc6a193ba4cb0d2b9cd";
+    String endurl =  "top-headlines/sources?category=$category&apiKey=f09dee59d1524d44bda79abf5b7af6f1";
     final url = Uri.parse(AppConfig.baseUrl + endurl);
     try{
       isLoading=true;
@@ -22,6 +22,8 @@ class CategoryModelController with ChangeNotifier{
 
         
         newsList = categoryModelFromJson(response.body);
+         // Check the URL
+
         
       }
     }catch(e){

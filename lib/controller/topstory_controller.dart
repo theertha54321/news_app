@@ -1,24 +1,34 @@
+
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:news_app/app_config.dart';
-import 'package:news_app/model/top_stories_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_app/model/category_model.dart';
+import 'package:news_app/model/headline_model.dart';
+import 'package:news_app/model/top_stories_model.dart';
+
 
 class TopstoryController with ChangeNotifier{
   bool isLoading = false;
-  TopStories? headlineList ;
-  Future<void> getTopHeadlinesbyVariousSources() async{
-    String endurl =  "top-headlines?country=us&apiKey=7701f3d356bc4cc6a193ba4cb0d2b9cd";
-    final url = Uri.parse(AppConfig.baseUrl + endurl);
+  TopStoryModel? newList ;
+  
+  HeadlineModel? list;
+  Future<void> getStories(String? source) async{
+    
+    final url = Uri.parse( "https://newsapi.org/v2/top-headlines?sources=$source&apiKey=f09dee59d1524d44bda79abf5b7af6f1");
     try{
       isLoading=true;
       notifyListeners();
       final response = await http.get(url);
+      // log(response.body.toString());
       if(response.statusCode==200){
        
 
         
-        headlineList = topStoriesFromJson(response.body);
-        
+        newList =topStoryModelFromJson(response.body);
+       
       }
     }catch(e){
 
@@ -26,4 +36,27 @@ class TopstoryController with ChangeNotifier{
     isLoading=false;
     notifyListeners();
   }
+  Future<void> getHeadlines() async{
+    
+    final url = Uri.parse("https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com&apiKey=f09dee59d1524d44bda79abf5b7af6f1");
+    try{
+      isLoading=true;
+      notifyListeners();
+      final response = await http.get(url);
+      log(response.body.toString());
+      if(response.statusCode==200){
+       
+
+        
+        list = headlineModelFromJson(response.body);
+        
+      }
+    }catch(e){
+
+    }
+    isLoading=false;
+    notifyListeners();
+    
+  }
+ 
 }

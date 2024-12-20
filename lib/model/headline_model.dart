@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final topStoryModel = topStoryModelFromJson(jsonString);
+//     final headlineModel = headlineModelFromJson(jsonString);
 
 import 'dart:convert';
 
-TopStoryModel topStoryModelFromJson(String str) => TopStoryModel.fromJson(json.decode(str));
+HeadlineModel headlineModelFromJson(String str) => HeadlineModel.fromJson(json.decode(str));
 
-String topStoryModelToJson(TopStoryModel data) => json.encode(data.toJson());
+String headlineModelToJson(HeadlineModel data) => json.encode(data.toJson());
 
-class TopStoryModel {
+class HeadlineModel {
     List<Article> articles;
 
-    TopStoryModel({
+    HeadlineModel({
         required this.articles,
     });
 
-    factory TopStoryModel.fromJson(Map<String, dynamic> json) => TopStoryModel(
+    factory HeadlineModel.fromJson(Map<String, dynamic> json) => HeadlineModel(
         articles: List<Article>.from(json["articles"].map((x) => Article.fromJson(x))),
     );
 

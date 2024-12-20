@@ -12,7 +12,7 @@ class SectionScreen extends StatefulWidget {
 
 class _SectionScreenState extends State<SectionScreen> {
    final List<String> categories = [
-    "All",
+    
     "Business",
     "Entertainment",
     "General",
@@ -26,7 +26,7 @@ class _SectionScreenState extends State<SectionScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await context.read<CategoryModelController>().getCategories(null);
+      await context.read<CategoryModelController>().getCategories(categories[0]);
     });
     super.initState();
   }
@@ -35,7 +35,7 @@ class _SectionScreenState extends State<SectionScreen> {
   Widget build(BuildContext context) {
     final sectionProvider  = context.watch<CategoryModelController>();
     return DefaultTabController(
-      length: 8,
+      length: 7,
       child: Scaffold(
         
         appBar: AppBar(
@@ -74,7 +74,8 @@ class _SectionScreenState extends State<SectionScreen> {
            _buildCategoryNews(),
            _buildCategoryNews(),
            _buildCategoryNews(),
-           _buildCategoryNews()
+          
+
           ]
         
         ),
@@ -147,7 +148,7 @@ class _SectionScreenState extends State<SectionScreen> {
                           InkWell(
                             onTap: (){
                              
-                           Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailsScreen()));
+                          //  Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailsScreen()));
                 
                             },
                             child: Text("See more",style: TextStyle(color: Colors.blue,fontSize: 10,)))
