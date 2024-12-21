@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/controller/saved_screen_controller.dart';
 import 'package:news_app/view/saved_screen/saved_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';  // Import url_launcher
 
 class DetailsScreen extends StatelessWidget {
@@ -89,7 +90,7 @@ class DetailsScreen extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.share, color: Colors.black),
                 onPressed: () {
-                  // Handle share action
+                 Share.share('checkout news https://example.com');
                 },
               ),
             ],
