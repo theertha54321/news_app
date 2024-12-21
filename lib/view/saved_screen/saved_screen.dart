@@ -1,8 +1,24 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:news_app/controller/saved_screen_controller.dart';
+import 'package:provider/provider.dart';
 
-class SavedScreen extends StatelessWidget {
+class SavedScreen extends StatefulWidget {
+  @override
+  State<SavedScreen> createState() => _SavedScreenState();
+}
+
+class _SavedScreenState extends State<SavedScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+     await context.read<SavedScreenController>().getNews();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    final savedscreenprovider= context.watch<SavedScreenController>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Saved News'),
@@ -11,7 +27,7 @@ class SavedScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: 10,
+          itemCount: savedscreenprovider.mylist.length,
           itemBuilder: (context, index) {
             return Card(
               margin: EdgeInsets.symmetric(vertical: 10),
@@ -31,7 +47,7 @@ class SavedScreen extends StatelessWidget {
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.image, color: Colors.black),
+                      child: CachedNetworkImage(imageUrl: savedscreenprovider.mylist[index]['image'].toString()),
                     ),
                     SizedBox(width: 16),
                     
@@ -40,7 +56,7 @@ class SavedScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Saved News Title ',
+                            savedscreenprovider.mylist[index]['title'].toString(),
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -53,7 +69,7 @@ class SavedScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'December 15, 2024', 
+                                savedscreenprovider.mylist[index]['source'].toString(), 
                                 style: TextStyle(fontSize: 14, color: Colors.grey),
                               ),
                               

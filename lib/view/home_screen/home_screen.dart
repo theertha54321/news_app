@@ -254,6 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailsScreen(
+                    
                     title: homeProvider.newList?.articles[index].title ?? "",
                     description: homeProvider.newList?.articles[index].description ?? "",
                     imageUrl: homeProvider.newList?.articles[index].urlToImage ?? "",

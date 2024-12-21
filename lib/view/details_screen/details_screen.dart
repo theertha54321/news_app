@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/controller/saved_screen_controller.dart';
+import 'package:news_app/view/saved_screen/saved_screen.dart';
+import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
   // Define the parameters for the article
@@ -8,7 +11,7 @@ class DetailsScreen extends StatelessWidget {
   final String description;
   final String imageUrl;
   final String source;
-   final String author;
+  final String author;
 
   // Update the constructor to accept the passed arguments
   const DetailsScreen({
@@ -19,7 +22,7 @@ class DetailsScreen extends StatelessWidget {
     required this.content,
     required this.imageUrl,
     required this.source,
-    required this.author
+    required this.author,
   });
 
   @override
@@ -48,8 +51,29 @@ class DetailsScreen extends StatelessWidget {
             actions: [
               IconButton(
                 icon: Icon(Icons.bookmark_border, color: Colors.black),
-                onPressed: () {
-                  // Handle bookmark action
+                onPressed: () async {
+                  // Check if the news article is already saved
+                  bool isSaved = await _checkIfSaved(context);
+                  if (isSaved) {
+                    // If it's already saved, show a message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('This news article is already saved!')),
+                    );
+                  } else {
+                    // Otherwise, save the news article
+                    await context.read<SavedScreenController>().addNews(
+                      title: title,
+                      source: source,
+                      image: imageUrl,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('News article saved!')),
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SavedScreen()),
+                    );
+                  }
                 },
               ),
               IconButton(
@@ -145,5 +169,16 @@ class DetailsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Check if the news article is already saved
+  Future<bool> _checkIfSaved(BuildContext context) async {
+    List<Map> savedNews = await context.read<SavedScreenController>().getSavedNews();
+    for (var news in savedNews) {
+      if (news['title'] == title) {
+        return true; // News article is already saved
+      }
+    }
+    return false; // News article is not saved yet
   }
 }
