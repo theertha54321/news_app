@@ -1,3 +1,4 @@
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/controller/topstory_controller.dart';
@@ -16,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int carouselIndex = 0;
-  final List sources = ['bbc-news','abc-news'];
+  final List sources = ['bbc-news','abc-news','bbc-sport'];
 
   @override
   void initState() {
@@ -114,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailsScreen(
+                           articleUrl:homeProvider.newList?.articles[carouselIndex].url ?? "" ,
                           title: homeProvider.list?.articles[carouselIndex].title ?? "",
                           description: homeProvider.list?.articles[carouselIndex].description ?? "",
                           imageUrl: homeProvider.list?.articles[carouselIndex].urlToImage ?? "",
@@ -188,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           viewportFraction: 1,
                           initialPage: carouselIndex,
                           reverse: false,
+                          autoPlay: true,
                           scrollDirection: Axis.horizontal,
                           onPageChanged: (index, reason) {
                             setState(() {
@@ -204,19 +207,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 20),
               DefaultTabController(
-                length: 2,
+                length: 3,
                 child: Column(
                   children: [
                     TabBar(
                       onTap: (index) async {
                         await context.read<TopstoryController>().getStories(sources[index]);
                       },
-                                labelColor: Colors.white,
-                                unselectedLabelColor: Colors.grey,
-                                indicatorColor: Colors.white,
+                                labelColor:const Color.fromARGB(255, 1, 13, 55) ,
+                                unselectedLabelColor: const Color.fromARGB(255, 1, 13, 55),
+                                indicatorColor: const Color.fromARGB(255, 1, 13, 55),
                                 tabs: [
                                   Tab(text: "BBC News"),
                                   Tab(text: "ABC News"),
+                                  Tab(text: "BBC Sport"),
                                 ],
                     ),
                     Container(
@@ -227,6 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     _buildNews(homeProvider),
 
                                     // ABC News Tab
+                                    _buildNews(homeProvider),
                                     _buildNews(homeProvider),
                                   ],
                                 ),
@@ -254,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailsScreen(
-                    
+                    articleUrl:homeProvider.newList?.articles[index].url ?? "" ,
                     title: homeProvider.newList?.articles[index].title ?? "",
                     description: homeProvider.newList?.articles[index].description ?? "",
                     imageUrl: homeProvider.newList?.articles[index].urlToImage ?? "",

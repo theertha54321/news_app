@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/controller/saved_screen_controller.dart';
 import 'package:news_app/view/saved_screen/saved_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';  // Import url_launcher
 
 class DetailsScreen extends StatelessWidget {
   // Define the parameters for the article
@@ -12,6 +13,7 @@ class DetailsScreen extends StatelessWidget {
   final String imageUrl;
   final String source;
   final String author;
+  final String articleUrl;  // Add the article URL
 
   // Update the constructor to accept the passed arguments
   const DetailsScreen({
@@ -23,6 +25,7 @@ class DetailsScreen extends StatelessWidget {
     required this.imageUrl,
     required this.source,
     required this.author,
+    required this.articleUrl,  // Add article URL as a parameter
   });
 
   @override
@@ -65,10 +68,17 @@ class DetailsScreen extends StatelessWidget {
                       title: title,
                       source: source,
                       image: imageUrl,
+                      content: content,
+                      description: description,
+                      publishedAt: date,
+                      author: author,
+                      url: articleUrl,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('News article saved!')),
                     );
+                    // Delay navigation until the save operation is completed
+                    await Future.delayed(Duration(seconds: 1)); // Adjust delay as needed
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SavedScreen()),
@@ -151,8 +161,15 @@ class DetailsScreen extends StatelessWidget {
                       SizedBox(height: 20),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Handle button press
+                          onPressed: () async {
+                            // Launch the URL when "Read More" is pressed
+                            if (await canLaunch(articleUrl)) {
+                              await launch(articleUrl);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Could not open the article URL!')),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 14, 3, 58),
@@ -173,7 +190,7 @@ class DetailsScreen extends StatelessWidget {
 
   // Check if the news article is already saved
   Future<bool> _checkIfSaved(BuildContext context) async {
-    List<Map> savedNews = await context.read<SavedScreenController>().getSavedNews();
+    List<Map> savedNews = await context.read<SavedScreenController>().getSavedNews() ?? [];
     for (var news in savedNews) {
       if (news['title'] == title) {
         return true; // News article is already saved

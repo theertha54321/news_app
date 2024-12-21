@@ -10,51 +10,75 @@ class SavedScreenController with ChangeNotifier {
     if (kIsWeb) {
       databaseFactory = databaseFactoryFfiWeb;
     }
-    // Open database and manage schema changes
+    // Open the database and manage schema changes
     database = await openDatabase(
       "saved.db",
-      version: 2,  // Increased version number for migration
+      version: 4,  // Incremented version number to 4
       onCreate: (db, version) async {
         await db.execute(
-          'CREATE TABLE Save (id INTEGER PRIMARY KEY, title TEXT, publishedAt TEXT, image TEXT, source TEXT)',
+          'CREATE TABLE Save (id INTEGER PRIMARY KEY, title TEXT, publishedAt TEXT, image TEXT, source TEXT, author TEXT, content TEXT, description TEXT, url TEXT)',
         );
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
-          // If we are upgrading from a previous version, add the 'source' column
           await db.execute(
             'ALTER TABLE Save ADD COLUMN source TEXT',
+          );
+        }
+        if (oldVersion < 3) {
+          await db.execute(
+            'ALTER TABLE Save ADD COLUMN author TEXT',
+          );
+          await db.execute(
+            'ALTER TABLE Save ADD COLUMN content TEXT',
+          );
+          await db.execute(
+            'ALTER TABLE Save ADD COLUMN description TEXT',
+          );
+        }
+        if (oldVersion < 4) {
+          // Add the new URL column in version 4
+          await db.execute(
+            'ALTER TABLE Save ADD COLUMN url TEXT',
           );
         }
       },
     );
   }
 
+  // Method to add a new news item with the new fields (including URL)
   Future addNews({
     required String title,
-    
     required String image,
-    required String source,  // Include source in addNews
+    required String source,
+    required String author,
+    required String content,
+    required String description,
+    required String publishedAt,
+    required String url,  // Add URL parameter
   }) async {
     await database.rawInsert(
-      'INSERT INTO Save(title,  image, source) VALUES(?, ?, ?)',
-      [title, image, source],
+      'INSERT INTO Save(title, image, source, author, content, description, publishedAt, url) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, image, source, author, content, description, publishedAt, url], // Insert URL into database
     );
     await getNews();
   }
 
+  // Method to get all saved news, including new fields
   Future getNews() async {
     mylist = await database.rawQuery('SELECT * FROM Save');
     print(mylist);
     notifyListeners();
   }
 
-  removeNews() {
-    // Add logic for removing news from the database
+  // Method to remove news
+  removeNews(int id) async {
+    await database.rawDelete('DELETE FROM Save WHERE id = ?', [id]);
+    await getNews();
   }
-  Future<List<Map>> getSavedNews() async {
-  // Fetch the list of saved news articles
-  return await database.rawQuery('SELECT * FROM Save');
-}
 
+  // Fetch all saved news
+  Future<List<Map>> getSavedNews() async {
+    return await database.rawQuery('SELECT * FROM Save');
+  }
 }

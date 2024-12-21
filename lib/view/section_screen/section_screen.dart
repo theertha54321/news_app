@@ -13,7 +13,7 @@ class SectionScreen extends StatefulWidget {
 
 class _SectionScreenState extends State<SectionScreen> {
    final List<String> categories = [
-    
+    "All",
     "Business",
     "Entertainment",
     "General",
@@ -27,7 +27,7 @@ class _SectionScreenState extends State<SectionScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await context.read<CategoryModelController>().getCategories(categories[0]);
+      await context.read<CategoryModelController>().getCategories(null);
     });
     super.initState();
   }
@@ -36,7 +36,7 @@ class _SectionScreenState extends State<SectionScreen> {
   Widget build(BuildContext context) {
     final sectionProvider  = context.watch<CategoryModelController>();
     return DefaultTabController(
-      length: 7,
+      length: 8,
       child: Scaffold(
         
         appBar: AppBar(
@@ -75,6 +75,7 @@ class _SectionScreenState extends State<SectionScreen> {
            _buildCategoryNews(),
            _buildCategoryNews(),
            _buildCategoryNews(),
+           _buildCategoryNews(),
           
 
           ]
@@ -92,79 +93,83 @@ class _SectionScreenState extends State<SectionScreen> {
     return ListView.builder(
               scrollDirection: Axis.vertical,
               itemCount: sectionProvider.newsList?.articles.length,
-              itemBuilder: (context,index)=>Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  height: 160,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color.fromARGB(255, 167, 208, 242),
-                    
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        child: CachedNetworkImage(imageUrl: sectionProvider.newsList?.articles[index].urlToImage ?? "",
-                        height: double.infinity,
-                        width: 120,
-                        fit: BoxFit.fill,
-                        ),
-                      ),
+              itemBuilder: (context,index)=>InkWell(
+                onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailsScreen(
+                      articleUrl: sectionProvider.newsList?.articles[index].url ?? "",
+                              title: sectionProvider.newsList?.articles[index].title ?? "",
+                      description: sectionProvider.newsList?.articles[index].description ?? "",
+                      imageUrl: sectionProvider.newsList?.articles[index].urlToImage ?? "",
+                      date: sectionProvider.newsList?.articles[index].publishedAt.toString() ?? "",
+                      content: sectionProvider.newsList?.articles[index].content ?? "",
+                      source: sectionProvider.newsList?.articles[index].source.name ?? "",
+                      author: sectionProvider.newsList?.articles[index].author ?? "",
+                             )));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color.fromARGB(255, 167, 208, 242),
                       
-                      SizedBox(width: 10,),
-                      Expanded(
-                        child: Column(
-                         
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(imageUrl: sectionProvider.newsList?.articles[index].urlToImage ?? "",
+                            height: double.infinity,
+                            width: 120,
                             
-                            Text(
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
-                              sectionProvider.newsList?.articles[index].title ?? "",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.w600)),
-                          Spacer(),
-                                    Row(
-                                      children:
-                                      [
-                                    Icon(Icons.source,size: 14,),
-                                    SizedBox(width: 2,),
-                                    Text(sectionProvider.newsList?.articles[index].source.name ?? "",style: TextStyle(color: Colors.black,fontSize: 12,),),
-                                      ]),
-                                    SizedBox(height: 8,),
-                                    Row(children: [
-                                      Icon(Icons.date_range,size: 14,),
-                                     SizedBox(width: 2,),
-                                    Text(sectionProvider.newsList?.articles[index].publishedAt.toString() ?? "",style: TextStyle(color: Colors.black,fontSize: 10,),),
-                                    ],)
-                                    
-                                 
-                          ],
+                            fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
-                      ),
-                       Spacer(),
-                       Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          InkWell(
-                            onTap: (){
-                             
-                           Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailsScreen(
-                            title: sectionProvider.newsList?.articles[index].title ?? "",
-                    description: sectionProvider.newsList?.articles[index].description ?? "",
-                    imageUrl: sectionProvider.newsList?.articles[index].urlToImage ?? "",
-                    date: sectionProvider.newsList?.articles[index].publishedAt.toString() ?? "",
-                    content: sectionProvider.newsList?.articles[index].content ?? "",
-                    source: sectionProvider.newsList?.articles[index].source.name ?? "",
-                    author: sectionProvider.newsList?.articles[index].author ?? "",
-                           )));
-                
-                            },
-                            child: Text("See more",style: TextStyle(color: Colors.blue,fontSize: 10,)))
-                        ],
-                       )
-                      ],
+                        
+                        SizedBox(width: 10,),
+                        Expanded(
+                          child: Column(
+                           
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              
+                              Text(
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
+                                sectionProvider.newsList?.articles[index].title ?? "",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.w600)),
+                            SizedBox(height: 6,),
+                            Text(
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 4,
+                                sectionProvider.newsList?.articles[index].description ?? "",style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.w500)),
+                           
+                            Spacer(),
+                                      Row(
+                                        children:
+                                        [
+                                      Icon(Icons.source,size: 14,),
+                                      
+                                      Text(sectionProvider.newsList?.articles[index].source.name ?? "",style: TextStyle(color: Colors.black,fontSize: 12,),),
+                                        ]),
+                                      SizedBox(height: 8,),
+                                      Row(children: [
+                                        Icon(Icons.date_range,size: 14,),
+                                      
+                                      Text(sectionProvider.newsList?.articles[index].publishedAt.toString() ?? "",style: TextStyle(color: Colors.black,fontSize: 10,),),
+                                      ],)
+                                      
+                                   
+                            ],
+                          ),
+                        ),
+                        
+                      ]   
+                    ),
                   ),
                 ),
               )
