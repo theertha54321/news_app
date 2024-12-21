@@ -108,7 +108,7 @@ class _SectionScreenState extends State<SectionScreen> {
                       Container(
                         child: CachedNetworkImage(imageUrl: sectionProvider.newsList?.articles[index].urlToImage ?? "",
                         height: double.infinity,
-                        width: 80,
+                        width: 120,
                         fit: BoxFit.fill,
                         ),
                       ),
@@ -125,14 +125,20 @@ class _SectionScreenState extends State<SectionScreen> {
                               maxLines: 3,
                               sectionProvider.newsList?.articles[index].title ?? "",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.w600)),
                           Spacer(),
-                          
+                                    Row(
+                                      children:
+                                      [
                                     Icon(Icons.source,size: 14,),
+                                    SizedBox(width: 2,),
+                                    Text(sectionProvider.newsList?.articles[index].source.name ?? "",style: TextStyle(color: Colors.black,fontSize: 12,),),
+                                      ]),
+                                    SizedBox(height: 8,),
+                                    Row(children: [
+                                      Icon(Icons.date_range,size: 14,),
+                                     SizedBox(width: 2,),
+                                    Text(sectionProvider.newsList?.articles[index].publishedAt.toString() ?? "",style: TextStyle(color: Colors.black,fontSize: 10,),),
+                                    ],)
                                     
-                                    Text(sectionProvider.newsList?.articles[index].source.name ?? "",style: TextStyle(color: Colors.black,fontSize: 9,),),
-                                    Spacer(),
-                                    Icon(Icons.date_range,size: 14,),
-                                    
-                                    Text(sectionProvider.newsList?.articles[index].publishedAt.toString() ?? "",style: TextStyle(color: Colors.black,fontSize: 9,),),
                                  
                           ],
                         ),
