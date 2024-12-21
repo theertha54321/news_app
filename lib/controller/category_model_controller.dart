@@ -11,12 +11,13 @@ class CategoryModelController with ChangeNotifier{
   bool isLoading = false;
   CategoryModel? newsList ;
   Future<void> getCategories(String? category) async{
-    String endurl =  "top-headlines/sources?category=$category&apiKey=f09dee59d1524d44bda79abf5b7af6f1";
-    final url = Uri.parse(AppConfig.baseUrl + endurl);
+    // String endurl =  "top-headlines/sources?category=$category&apiKey=f09dee59d1524d44bda79abf5b7af6f1";
+    final url = Uri.parse("https://newsapi.org/v2/everything?q=$category&apiKey=4a891334103c49d09bc336e77ce66e2c");
     try{
       isLoading=true;
       notifyListeners();
       final response = await http.get(url);
+      log(response.body);
       if(response.statusCode==200){
        
 

@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int carouselIndex = 0;
-  final List sources = ['bbc-news', 'abc-news', 'ansa'];
+  final List sources = ['bbc-news','abc-news'];
 
   @override
   void initState() {
@@ -108,85 +108,94 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 20),
               InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(title: homeProvider.list?.articles[carouselIndex].title ?? "No Title",
-          date: homeProvider.list?.articles[carouselIndex].publishedAt.toString() ?? "No Date",
-          description: homeProvider.list?.articles[carouselIndex].description ?? "No Description",
-          imageUrl: homeProvider.list?.articles[carouselIndex].urlToImage ?? "",
-          source: homeProvider.list?.articles[carouselIndex].source.name ?? "No Source",)));
+                  // Ensure the article exists and navigate to the DetailsScreen
+                  if (homeProvider.list?.articles.isNotEmpty ?? false) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailsScreen(
+                          title: homeProvider.list?.articles[carouselIndex].title ?? "",
+                          description: homeProvider.list?.articles[carouselIndex].description ?? "",
+                          imageUrl: homeProvider.list?.articles[carouselIndex].urlToImage ?? "",
+                          date: homeProvider.list?.articles[carouselIndex].publishedAt.toString() ?? "",
+                          content: homeProvider.list?.articles[carouselIndex].content ?? "",
+                          source: homeProvider.list?.articles[carouselIndex].source.name ?? "",
+                          author: homeProvider.list?.articles[carouselIndex].author ?? "",
+                        ),
+                      ),
+                    );
+                  }
                 },
-                child: CarouselSlider(
-                  items: List.generate(
-                    homeProvider.list?.articles.length ?? 0,
-                    (index) {
-                      return homeProvider.isLoading == true
-                          ? Center(child: CircularProgressIndicator())
-                          : Container(
-                              height: 100,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: CachedNetworkImageProvider(
-                                    homeProvider.list?.articles[index].urlToImage ?? "",
-                                  ),
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    height: 250,
+                child: homeProvider.isLoading == true
+                    ? Center(child: CircularProgressIndicator())
+                    : CarouselSlider(
+                        items: List.generate(
+                          homeProvider.list?.articles.length ?? 0,
+                          (index) {
+                            return homeProvider.isLoading == true
+                                ? Center(child: CircularProgressIndicator())
+                                : Container(
+                                    height: 100,
+                                    width: double.infinity,
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.black.withOpacity(0),
-                                          Colors.black.withOpacity(.2),
-                                          Colors.black.withOpacity(.6),
-                                          Colors.black.withOpacity(.7),
-                                        ],
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: CachedNetworkImageProvider(
+                                          homeProvider.list?.articles[index].urlToImage ?? "",
+                                        ),
                                       ),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 70, bottom: 35, left: 37, right: 37),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            maxLines: 3,
-                                            textAlign: TextAlign.center,
-                                            homeProvider.list?.articles[index].title ?? "",
-                                            style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          height: 250,
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Colors.black.withOpacity(0),
+                                                Colors.black.withOpacity(.2),
+                                                Colors.black.withOpacity(.6),
+                                                Colors.black.withOpacity(.7),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 70, bottom: 35, left: 37, right: 37),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  maxLines: 3,
+                                                  textAlign: TextAlign.center,
+                                                  homeProvider.list?.articles[index].title ?? "",
+                                                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                    },
-                  ),
-                  options: CarouselOptions(
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 1,
-                    initialPage: carouselIndex,
-                    enableInfiniteScroll: true,
-                    reverse: false,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    scrollDirection: Axis.horizontal,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        carouselIndex = index; // Update the carousel index when it changes
-                      });
-                    },
-                  ),
-                ),
+                                  );
+                          },
+                        ),
+                        options: CarouselOptions(
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 1,
+                          initialPage: carouselIndex,
+                          reverse: false,
+                          scrollDirection: Axis.horizontal,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              carouselIndex = index; // Update the carousel index when it changes
+                            });
+                          },
+                        ),
+                      ),
               ),
               SizedBox(height: 20),
               Text(
@@ -195,24 +204,32 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 20),
               DefaultTabController(
-                length: 3,
+                length: 2,
                 child: Column(
                   children: [
                     TabBar(
                       onTap: (index) async {
                         await context.read<TopstoryController>().getStories(sources[index]);
                       },
-                      tabs: sources.map((e) => Tab(text: e)).toList(),
+                                labelColor: Colors.white,
+                                unselectedLabelColor: Colors.grey,
+                                indicatorColor: Colors.white,
+                                tabs: [
+                                  Tab(text: "BBC News"),
+                                  Tab(text: "ABC News"),
+                                ],
                     ),
                     Container(
                       height: 400, // Adjust this based on how many items you want to show
                       child: TabBarView(
-                        children: [
-                          _buildNews(homeProvider),
-                          _buildNews(homeProvider),
-                          _buildNews(homeProvider),
-                        ],
-                      ),
+                                  children: [
+                                    // BBC News Tab
+                                    _buildNews(homeProvider),
+
+                                    // ABC News Tab
+                                    _buildNews(homeProvider),
+                                  ],
+                                ),
                     ),
                   ],
                 ),
@@ -226,16 +243,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ListView _buildNews(TopstoryController homeProvider) {
     return ListView.builder(
-      itemCount: homeProvider.newList?.articles.length,
+      itemCount: homeProvider.newList?.articles.length ?? 0,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(title: homeProvider.list?.articles[index].title ?? "No Title",
-          date: homeProvider.newList?.articles[index].publishedAt.toString() ?? "No Date",
-          description: homeProvider.newList?.articles[index].description ?? "No Description",
-          imageUrl: homeProvider.newList?.articles[index].urlToImage ?? "",
-          source: homeProvider.newList?.articles[index].source.name ?? "No Source",)));
+            // Ensure the article exists and navigate to the DetailsScreen
+            if (homeProvider.newList?.articles.isNotEmpty ?? false) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsScreen(
+                    title: homeProvider.newList?.articles[index].title ?? "",
+                    description: homeProvider.newList?.articles[index].description ?? "",
+                    imageUrl: homeProvider.newList?.articles[index].urlToImage ?? "",
+                    date: homeProvider.newList?.articles[index].publishedAt.toString() ?? "",
+                    content: homeProvider.newList?.articles[index].content ?? "",
+                    source: homeProvider.newList?.articles[index].source.name ?? "",
+                    author: homeProvider.newList?.articles[index].author ?? "",
+                  ),
+                ),
+              );
+            }
           },
           child: Container(
             padding: EdgeInsets.all(10),

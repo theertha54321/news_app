@@ -17,7 +17,7 @@ class TopstoryController with ChangeNotifier{
   HeadlineModel? list;
   Future<void> getStories(String? source) async{
     
-    final url = Uri.parse( "https://newsapi.org/v2/top-headlines?sources=$source&apiKey=f09dee59d1524d44bda79abf5b7af6f1");
+    final url = Uri.parse( "https://newsapi.org/v2/top-headlines?sources=$source&apiKey=4a891334103c49d09bc336e77ce66e2c");
     try{
       isLoading=true;
       notifyListeners();
@@ -38,7 +38,7 @@ class TopstoryController with ChangeNotifier{
   }
   Future<void> getHeadlines() async{
     
-    final url = Uri.parse("https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com&apiKey=f09dee59d1524d44bda79abf5b7af6f1");
+    final url = Uri.parse("https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com&apiKey=4a891334103c49d09bc336e77ce66e2c");
     try{
       isLoading=true;
       notifyListeners();

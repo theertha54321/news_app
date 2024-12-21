@@ -4,9 +4,11 @@ class DetailsScreen extends StatelessWidget {
   // Define the parameters for the article
   final String title;
   final String date;
+  final String content;
   final String description;
   final String imageUrl;
   final String source;
+   final String author;
 
   // Update the constructor to accept the passed arguments
   const DetailsScreen({
@@ -14,8 +16,10 @@ class DetailsScreen extends StatelessWidget {
     required this.title,
     required this.date,
     required this.description,
+    required this.content,
     required this.imageUrl,
     required this.source,
+    required this.author
   });
 
   @override
@@ -95,7 +99,7 @@ class DetailsScreen extends StatelessWidget {
                       ),
                       Divider(thickness: 1, height: 30),
                       Text(
-                        "By Author", // Static text for author
+                        author, // Static text for author
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black87,
@@ -105,6 +109,15 @@ class DetailsScreen extends StatelessWidget {
                       SizedBox(height: 16),
                       Text(
                         description, // Use the passed description
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        content, // Use the passed description
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black87,
