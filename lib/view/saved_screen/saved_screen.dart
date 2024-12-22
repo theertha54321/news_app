@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/controller/saved_screen_controller.dart';
 import 'package:news_app/view/details_screen/details_screen.dart';
+import 'package:news_app/view/home_screen/home_screen.dart';
 import 'package:provider/provider.dart';
 
 class SavedScreen extends StatefulWidget {
@@ -23,8 +24,13 @@ class _SavedScreenState extends State<SavedScreen> {
     final savedscreenprovider = context.watch<SavedScreenController>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Saved News'),
-        backgroundColor: Colors.deepPurple,
+        leading:InkWell(
+          onTap: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+          },
+          child: Icon(Icons.arrow_back,color: Colors.white,)),
+        title: Text('Saved News',style: TextStyle(color: Colors.white),),
+        backgroundColor: const Color.fromARGB(255, 15, 3, 62),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,8 +40,8 @@ class _SavedScreenState extends State<SavedScreen> {
             var newsItem = savedscreenprovider.mylist[index];
             return InkWell(
               onTap: () {
-                // Navigate to DetailsScreen with the added fields
-                Navigator.push(
+                
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => DetailsScreen(
@@ -63,7 +69,7 @@ class _SavedScreenState extends State<SavedScreen> {
                     children: [
                       Container(
                         width: 80,
-                        height: double.infinity,
+                        height: 120,
                         decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(12),
@@ -92,10 +98,7 @@ class _SavedScreenState extends State<SavedScreen> {
                               style: TextStyle(fontSize: 14, color: Colors.grey),
                             ),
                             SizedBox(height: 4),
-                            Text(
-                              newsItem['description'].toString(),
-                              style: TextStyle(fontSize: 14),
-                            ),
+                            
                           ],
                         ),
                       ),

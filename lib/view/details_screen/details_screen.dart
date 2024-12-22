@@ -3,10 +3,10 @@ import 'package:news_app/controller/saved_screen_controller.dart';
 import 'package:news_app/view/saved_screen/saved_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';  // Import url_launcher
+import 'package:url_launcher/url_launcher.dart';  
 
 class DetailsScreen extends StatelessWidget {
-  // Define the parameters for the article
+  
   final String title;
   final String date;
   final String content;
@@ -14,9 +14,9 @@ class DetailsScreen extends StatelessWidget {
   final String imageUrl;
   final String source;
   final String author;
-  final String articleUrl;  // Add the article URL
+  final String articleUrl; 
 
-  // Update the constructor to accept the passed arguments
+  
   const DetailsScreen({
     super.key,
     required this.title,
@@ -26,7 +26,7 @@ class DetailsScreen extends StatelessWidget {
     required this.imageUrl,
     required this.source,
     required this.author,
-    required this.articleUrl,  // Add article URL as a parameter
+    required this.articleUrl,  
   });
 
   @override
@@ -42,7 +42,7 @@ class DetailsScreen extends StatelessWidget {
             elevation: 0,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.network(
-                imageUrl, // Use the passed image URL
+                imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -56,15 +56,15 @@ class DetailsScreen extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.bookmark_border, color: Colors.black),
                 onPressed: () async {
-                  // Check if the news article is already saved
+                  
                   bool isSaved = await _checkIfSaved(context);
                   if (isSaved) {
-                    // If it's already saved, show a message
+                    
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('This news article is already saved!')),
                     );
                   } else {
-                    // Otherwise, save the news article
+                   
                     await context.read<SavedScreenController>().addNews(
                       title: title,
                       source: source,
@@ -78,8 +78,8 @@ class DetailsScreen extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('News article saved!')),
                     );
-                    // Delay navigation until the save operation is completed
-                    await Future.delayed(Duration(seconds: 1)); // Adjust delay as needed
+                    
+                    await Future.delayed(Duration(seconds: 1));
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SavedScreen()),
@@ -111,7 +111,7 @@ class DetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title, // Use the passed title
+                        title, 
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -123,18 +123,18 @@ class DetailsScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            source, // Use the passed source
+                            source, 
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                           Text(
-                            date, // Use the passed date
+                            date, 
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ],
                       ),
                       Divider(thickness: 1, height: 30),
                       Text(
-                        author, // Static text for author
+                        author, 
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black87,
@@ -143,7 +143,7 @@ class DetailsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        description, // Use the passed description
+                        description, 
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black87,
@@ -152,7 +152,7 @@ class DetailsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        content, // Use the passed description
+                        content, 
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black87,
@@ -163,7 +163,7 @@ class DetailsScreen extends StatelessWidget {
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                            // Launch the URL when "Read More" is pressed
+                           
                             if (await canLaunch(articleUrl)) {
                               await launch(articleUrl);
                             } else {
@@ -189,14 +189,14 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  // Check if the news article is already saved
+ 
   Future<bool> _checkIfSaved(BuildContext context) async {
     List<Map> savedNews = await context.read<SavedScreenController>().getSavedNews() ?? [];
     for (var news in savedNews) {
       if (news['title'] == title) {
-        return true; // News article is already saved
+        return true; 
       }
     }
-    return false; // News article is not saved yet
+    return false; 
   }
 }
