@@ -274,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             padding: EdgeInsets.all(10),
-            height: 150,
+            height: 180,
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
