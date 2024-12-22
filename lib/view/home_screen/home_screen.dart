@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int carouselIndex = 0;
-  final List sources = ['bbc-news','abc-news','bbc-sport'];
+  final List sources = ['bbc-news','abc-news'];
 
   @override
   void initState() {
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailsScreen(
-                           articleUrl:homeProvider.newList?.articles[carouselIndex].url ?? "" ,
+                           articleUrl:homeProvider.list?.articles[carouselIndex].url ?? "" ,
                           title: homeProvider.list?.articles[carouselIndex].title ?? "",
                           description: homeProvider.list?.articles[carouselIndex].description ?? "",
                           imageUrl: homeProvider.list?.articles[carouselIndex].urlToImage ?? "",
@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 20),
               DefaultTabController(
-                length: 3,
+                length: 2,
                 child: Column(
                   children: [
                     TabBar(
@@ -220,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 tabs: [
                                   Tab(text: "BBC News"),
                                   Tab(text: "ABC News"),
-                                  Tab(text: "BBC Sport"),
+                                  
                                 ],
                     ),
                     Container(
@@ -232,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                     // ABC News Tab
                                     _buildNews(homeProvider),
-                                    _buildNews(homeProvider),
+                                    
                                   ],
                                 ),
                     ),

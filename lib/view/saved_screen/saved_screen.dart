@@ -63,15 +63,15 @@ class _SavedScreenState extends State<SavedScreen> {
                     children: [
                       Container(
                         width: 80,
-                        height: 90,
+                        height: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: CachedNetworkImage(
                           imageUrl: newsItem['image'].toString(),
-                          fit: BoxFit.cover,
-                          height: 70,
+                          fit: BoxFit.fill,
+                         
                         ),
                       ),
                       SizedBox(width: 16),
