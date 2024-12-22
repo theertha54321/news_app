@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/controller/saved_screen_controller.dart';
+import 'package:news_app/view/bottom_nav/bottom_nav.dart';
 import 'package:news_app/view/details_screen/details_screen.dart';
 import 'package:news_app/view/home_screen/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class _SavedScreenState extends State<SavedScreen> {
       appBar: AppBar(
         leading:InkWell(
           onTap: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));
           },
           child: Icon(Icons.arrow_back,color: Colors.white,)),
         title: Text('Saved News',style: TextStyle(color: Colors.white),),
