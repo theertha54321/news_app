@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/controller/saved_screen_controller.dart';
+import 'package:news_app/view/bottom_nav/bottom_nav.dart';
 import 'package:news_app/view/saved_screen/saved_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -49,7 +50,7 @@ class DetailsScreen extends StatelessWidget {
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));
               },
             ),
             actions: [
