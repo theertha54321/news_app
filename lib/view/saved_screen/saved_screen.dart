@@ -15,7 +15,7 @@ class _SavedScreenState extends State<SavedScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await context.read<SavedScreenController>().getNews();
+      await context.read<SavedScreenController>().getSavedArticles();
     });
     super.initState();
   }
@@ -36,9 +36,9 @@ class _SavedScreenState extends State<SavedScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: savedscreenprovider.mylist.length,
+          itemCount: savedscreenprovider.savedArticles.length,
           itemBuilder: (context, index) {
-            var newsItem = savedscreenprovider.mylist[index];
+            var newsItem = savedscreenprovider.savedArticles[index];
             return InkWell(
               onTap: () {
                 
@@ -106,7 +106,7 @@ class _SavedScreenState extends State<SavedScreen> {
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.red),
                         onPressed: () async {
-                         await context.read<SavedScreenController>().removeNews(savedscreenprovider.mylist[index]['id']);
+                         await context.read<SavedScreenController>().removeNews(savedscreenprovider.savedArticles[index]['id']);
                         },
                       ),
                     ],

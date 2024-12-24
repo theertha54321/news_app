@@ -4,10 +4,9 @@ import 'package:news_app/view/bottom_nav/bottom_nav.dart';
 import 'package:news_app/view/saved_screen/saved_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';  
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailsScreen extends StatelessWidget {
-  
   final String title;
   final String date;
   final String content;
@@ -15,9 +14,8 @@ class DetailsScreen extends StatelessWidget {
   final String imageUrl;
   final String source;
   final String author;
-  final String articleUrl; 
+  final String articleUrl;
 
-  
   const DetailsScreen({
     super.key,
     required this.title,
@@ -27,7 +25,7 @@ class DetailsScreen extends StatelessWidget {
     required this.imageUrl,
     required this.source,
     required this.author,
-    required this.articleUrl,  
+    required this.articleUrl,
   });
 
   @override
@@ -50,48 +48,53 @@ class DetailsScreen extends StatelessWidget {
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => BottomNav()),
+                );
               },
             ),
             actions: [
               IconButton(
                 icon: Icon(Icons.bookmark_border, color: Colors.black),
-                onPressed: () async {
-                  
-                  bool isSaved = await _checkIfSaved(context);
-                  if (isSaved) {
-                    
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('This news article is already saved!')),
-                    );
-                  } else {
-                   
-                    await context.read<SavedScreenController>().addNews(
-                      title: title,
-                      source: source,
-                      image: imageUrl,
-                      content: content,
-                      description: description,
-                      publishedAt: date,
-                      author: author,
-                      url: articleUrl,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('News article saved!')),
-                    );
-                    
-                    await Future.delayed(Duration(seconds: 1));
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SavedScreen()),
-                    );
-                  }
+                onPressed: () async 
+                
+                {
+                   bool isSaved = await context.read<SavedScreenController>().isArticleSaved(title);
+                   if (isSaved) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('This news article is already saved!')),
+      );
+    } else {
+      await context.read<SavedScreenController>().addNews(
+        title: title,
+        image: imageUrl,
+        source: source,
+        author: author,
+        content: content,
+        description: description,
+        publishedAt: date,
+        url: articleUrl,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('News article saved!')),
+      );
+
+     
+      await Future.delayed(Duration(seconds: 1));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SavedScreen()),
+      );
+    }
+                 
                 },
               ),
               IconButton(
                 icon: Icon(Icons.share, color: Colors.black),
                 onPressed: () {
-                 Share.share('checkout news https://example.com');
+                  Share.share(articleUrl);
                 },
               ),
             ],
@@ -112,7 +115,7 @@ class DetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title, 
+                        title,
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -124,18 +127,18 @@ class DetailsScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            source, 
+                            source,
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                           Text(
-                            date, 
+                            date,
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ],
                       ),
                       Divider(thickness: 1, height: 30),
                       Text(
-                        author, 
+                        author,
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black87,
@@ -144,7 +147,7 @@ class DetailsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        description, 
+                        description,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black87,
@@ -153,7 +156,7 @@ class DetailsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        content, 
+                        content,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black87,
@@ -164,7 +167,6 @@ class DetailsScreen extends StatelessWidget {
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                           
                             if (await canLaunch(articleUrl)) {
                               await launch(articleUrl);
                             } else {
@@ -176,7 +178,10 @@ class DetailsScreen extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 14, 3, 58),
                           ),
-                          child: Text("Read More", style: TextStyle(fontSize: 16, color: Colors.white)),
+                          child: Text(
+                            "Read More",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                         ),
                       ),
                     ],
@@ -191,13 +196,5 @@ class DetailsScreen extends StatelessWidget {
   }
 
  
-  Future<bool> _checkIfSaved(BuildContext context) async {
-    List<Map> savedNews = await context.read<SavedScreenController>().getSavedNews() ?? [];
-    for (var news in savedNews) {
-      if (news['title'] == title) {
-        return true; 
-      }
-    }
-    return false; 
-  }
+  
 }

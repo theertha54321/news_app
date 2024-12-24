@@ -1,12 +1,14 @@
-
+import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app/controller/topstory_controller.dart';
-import 'package:news_app/main.dart';
-import 'package:news_app/view/details_screen/details_screen.dart';
+import 'package:news_app/controller/saved_screen_controller.dart';
 import 'package:news_app/view/saved_screen/saved_screen.dart';
+import 'package:news_app/view/search_result_screen/search_result_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart'; // Import this package
+import 'package:news_app/controller/topstory_controller.dart';
+import 'package:news_app/view/details_screen/details_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart'; 
+ 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,8 +18,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
   int carouselIndex = 0;
-  final List sources = ['bbc-news','abc-news'];
+  final List sources = ['bbc-news', 'abc-news'];
+  TextEditingController _searchController = TextEditingController(); 
+
+
 
   @override
   void initState() {
@@ -27,6 +34,26 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     super.initState();
   }
+
+ 
+
+
+  void _onSearch(String query) {
+    if (query.isNotEmpty) {
+     
+      context.read<TopstoryController>().searchNews(query);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SearchResultsScreen(query: query), // New screen
+        ),
+      );
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SavedScreen()),
-              );
+            onPressed: () async {
+              await context.read<SavedScreenController>().getSavedArticles();
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>SavedScreen()));
             },
             icon: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -83,8 +108,14 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
+                controller: _searchController,
                 cursorHeight: 18,
                 cursorColor: Colors.grey,
+               
+                onFieldSubmitted: (query) {
+                 
+                  _onSearch(query);
+                },
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -107,9 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(color: const Color.fromARGB(255, 1, 31, 55), fontWeight: FontWeight.bold, fontSize: 22),
               ),
               SizedBox(height: 20),
-              InkWell(
+             
+               InkWell(
                 onTap: () {
-                  // Ensure the article exists and navigate to the DetailsScreen
+                  
                   if (homeProvider.list?.articles.isNotEmpty ?? false) {
                     Navigator.push(
                       context,
@@ -140,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 100,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
                                       image: DecorationImage(
                                         fit: BoxFit.cover,
                                         image: CachedNetworkImageProvider(
@@ -194,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           scrollDirection: Axis.horizontal,
                           onPageChanged: (index, reason) {
                             setState(() {
-                              carouselIndex = index; // Update the carousel index when it changes
+                              carouselIndex = index; 
                             });
                           },
                         ),
@@ -224,13 +257,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                     ),
                     Container(
-                      height: 400, // Adjust this based on how many items you want to show
+                      height: 400,
                       child: TabBarView(
                                   children: [
-                                    // BBC News Tab
+                                    
                                     _buildNews(homeProvider),
 
-                                    // ABC News Tab
+                                    
                                     _buildNews(homeProvider),
                                     
                                   ],
@@ -253,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
           onTap: () {
-            // Ensure the article exists and navigate to the DetailsScreen
+            
             if (homeProvider.newList?.articles.isNotEmpty ?? false) {
               Navigator.push(
                 context,
@@ -344,3 +377,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+              
