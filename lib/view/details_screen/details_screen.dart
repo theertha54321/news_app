@@ -48,10 +48,8 @@ class DetailsScreen extends StatelessWidget {
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => BottomNav()),
-                );
+                Navigator.pop(context);
+                
               },
             ),
             actions: [
