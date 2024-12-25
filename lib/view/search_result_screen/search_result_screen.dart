@@ -34,7 +34,7 @@ class SearchResultsScreen extends StatelessWidget {
                         imageUrl: searchProvider.searchResults?.articles[index].urlToImage ?? '',
                          height: double.infinity,
                             width: 120,
-                        placeholder: (context, url) => CircularProgressIndicator(),
+                       
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                       title: Text(searchProvider.searchResults?.articles[index].title ?? 'No Title'),

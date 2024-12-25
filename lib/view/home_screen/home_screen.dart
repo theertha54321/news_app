@@ -172,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 100,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(15),
                                       image: DecorationImage(
                                         fit: BoxFit.cover,
                                         image: CachedNetworkImageProvider(
